@@ -31,7 +31,8 @@ LegalTech addresses this through **explicit expert specialization guided by a le
 
 ## 3. End-to-End Architecture
 
-<img width="1770" height="725" alt="image" src="https://github.com/user-attachments/assets/fda7793b-e68e-4970-851a-2d376673104a" />
+<img width="1777" height="744" alt="image" src="https://github.com/user-attachments/assets/23af228b-40e3-4880-9105-cb22c7cafd6f" />
+
 
 
 The system follows a strictly modular pipeline:
