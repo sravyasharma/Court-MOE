@@ -133,7 +133,7 @@ Each expert is optimized independently to avoid negative transfer.
 - Court-wise Confusion Matrices
 - Router Entropy and Routing Confidence
 
-Metrics are logged and visualized through the admin dashboard.
+Metrics are logged and visualized through the dashboard.
 
 ---
 
