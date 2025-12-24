@@ -1,107 +1,115 @@
-# LegalTech – Court-Aware AI System for Legal Document Analysis
+# LegalTech – Court-Aware Mixture-of-Experts System for Legal Document Intelligence
 
-## Overview
+## 1. Project Description
 
-LegalTech is an end-to-end AI-driven legal document analysis platform designed to process, classify, and route Indian legal case documents across different court types.  
-The system leverages modern deep learning architectures, domain-adapted language models, and a Mixture-of-Experts (MoE) framework to achieve court-specific specialization and improved prediction accuracy.
+LegalTech is a court-aware legal document intelligence platform designed to analyze, route, and classify Indian legal case documents using a Mixture-of-Experts (MoE) deep learning architecture.
 
-This repository contains the complete backend ML pipeline along with the web application stack used for deployment and visualization.
+The system combines:
+- Domain-adapted language models (Legal-BERT)
+- Parameter-efficient fine-tuning (LoRA)
+- Supervised neural routing
+- Court-specialized expert classifiers
+- A full-stack MERN-based deployment layer
 
----
-
-## Key Objectives
-
-- Automate legal document understanding using domain-specific language models
-- Enable court-aware routing using a supervised router network
-- Train specialized expert models for different court categories
-- Provide an interactive web interface for analysis, metrics, and inference
-- Maintain scalability, modularity, and reproducibility
+The goal is to move beyond monolithic legal NLP models and instead enable **court-specific reasoning**, **scalable inference**, and **interpretability-driven analytics**.
 
 ---
 
-## Architecture Summary
+## 2. Problem Motivation
 
-The system follows a modular, production-oriented pipeline:
+Indian legal documents vary significantly across court hierarchies:
+- Constitutional reasoning in Supreme Court cases
+- Precedent-heavy arguments in High Courts
+- Fact-dense procedural language in District Courts
+- Regulatory tone in Tribunal orders
+- Summary-style Daily Orders
 
-1. **LoRA Conversion**
-   - Conversion of the dataset into a structured format , tailored to model understanding.
-
-2. **Tokenization**
-   - Customized tokenizer (Base - LegalBERT) using chunking methodology
-
-3. **Encoding**
-   - Chunk-based embedding generation with pooling strategies
-
-4. **Router Network**
-   - Supervised MLP-based router with temperature annealing
-   - Predicts the most relevant court expert for each document
-
-5. **Expert Models**
-   - Independent court-specific classifiers
-   - Trained using advanced optimization strategies
-
-6. **Inference & Deployment**
-   - Integrated with a MERN-based web platform
+A single model fails to capture this diversity effectively.  
+LegalTech addresses this through **explicit expert specialization guided by a learned router**.
 
 ---
 
-## Court Experts Supported
+## 3. End-to-End Architecture
 
-- Supreme Court  
-- High Court  
-- District Court  
-- Tribunal  
-- Daily Orders  
+<img width="1770" height="725" alt="image" src="https://github.com/user-attachments/assets/fda7793b-e68e-4970-851a-2d376673104a" />
 
-Each expert is trained independently to capture court-specific linguistic and procedural patterns.
+
+The system follows a strictly modular pipeline:
+
+### 3.1 LoRA Conversion
+- Base encoder: Legal-BERT
+- LoRA adapters injected into attention and feed-forward layers
+- Enables memory-efficient fine-tuning without full model retraining
+
+### 3.2 Tokenization Layer
+- Custom tokenizer trained on Indian legal corpora
+- Preserves legal citations, section references, and court-specific terminology
+- Fixed vocabulary for reproducible encoding
+
+### 3.3 Encoding Pipeline
+- Long documents split into overlapping chunks
+- Each chunk encoded independently
+- Mean pooling applied to generate document-level embeddings
+- Output dimension: 768
+
+### 3.4 Router Network
+- Supervised multi-class classifier
+- Input: document embeddings (+ optional metadata)
+- Architecture: SE-Residual MLP
+- Uses temperature annealing to transition from soft to hard routing
+- Outputs a single court expert selection at inference
+
+### 3.5 Court-Specific Experts
+Each expert is trained independently:
+- Supreme Court Expert
+- High Court Expert
+- District Court Expert
+- Tribunal Expert
+- Daily Order Expert
+
+Experts learn court-specific linguistic and semantic distributions, improving accuracy and robustness.
+
+### 3.6 Inference Flow
+1. Document → Tokenization
+2. Tokenized chunks → Encoder
+3. Encoded representation → Router
+4. Router selects expert
+5. Expert produces final prediction
+6. Metrics logged and visualized via frontend
 
 ---
 
-## Technology Stack
+## 4. Technology Stack
 
-### Machine Learning & AI
+### Machine Learning
 - Python
 - PyTorch
 - HuggingFace Transformers
 - Legal-BERT
-- LoRA (Low-Rank Adaptation)
+- LoRA (PEFT)
 
 ### Backend
 - Node.js
 - Express.js
+- REST-based inference APIs
 
 ### Frontend
 - React (Vite)
 - Tailwind CSS
+- Interactive dashboards and analytics
 
 ### Database
 - MongoDB
+- Stores users, logs, metrics, and metadata
 
 ### Infrastructure
-- GPU-based training (DGX / A100)
-- Model checkpoints stored as `.pt` and `.pth` files
+- GPU-based training (A100 / DGX class systems)
+- Mixed Precision Training (AMP)
+- Checkpoint-based recovery
 
 ---
 
-## Repository Structure
-
-Court - MOE/
-│
-├── encoding/ # Pre-encoded embeddings
-├── tokenizer/ # Custom tokenizer files
-├── lora/ # LoRA adapters and configs
-├── router/ # Court routing model
-├── experts/ # Court-specific expert models
-├── inference/ # Inference and evaluation scripts
-├── backend/ # Node + Express backend
-├── frontend/ # React + Tailwind frontend
-├── metrics/ # Confusion matrices and evaluation
-├── docs/ # Documentation and reports
-└── README.md
-
----
-
-## Training Methodologies
+## 5. Training Strategy
 
 - Stratified K-Fold Cross Validation
 - Mixed Precision Training (AMP)
@@ -111,37 +119,42 @@ Court - MOE/
 - Asymmetric Focal Loss
 - Cosine Learning Rate Scheduling
 
+Each expert is optimized independently to avoid negative transfer.
+
 ---
 
-## Evaluation Metrics
+## 6. Evaluation Metrics
 
 - Accuracy
 - Precision
 - Recall
 - F1 Score
-- Confusion Matrices (per expert)
+- Court-wise Confusion Matrices
 - Router Entropy and Routing Confidence
 
----
-
-## Deployment
-
-The system is deployed as a full-stack web application with:
-
-- Backend APIs for inference and analytics
-- Frontend dashboards for court-wise insights
-- Secure model loading and inference routing
+Metrics are logged and visualized through the admin dashboard.
 
 ---
- 
-## License
 
-This project is intended for academic, research, and educational purposes.  
+## 7. Deployment Overview
+
+- Backend APIs handle encoding, routing, and inference
+- Frontend dashboards display:
+  - Court-wise predictions
+  - Performance metrics
+  - Confusion matrices
+- System designed for modular scaling and expert expansion
+
+---
+
+## 9. Notes
+
+- Large model files are excluded from version control
+- GPU is recommended for training and batch inference
+  
+---
+
+## 11. License
+
+This project is intended for academic and research purposes.  
 All rights reserved by the authors.
-
----
-
-## Notes
-
-- Large model files are excluded from version control.
-- Ensure GPU availability before running training scripts.
