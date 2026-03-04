@@ -1,161 +1,330 @@
-# LegalTech – Court-Aware Mixture-of-Experts System for Legal Document Intelligence
+# ⚖️ Court-MOE
 
-## 1. Project Description
+### LegalTech – AI Powered Legal Judgment Prediction
 
-LegalTech is a court-aware legal document intelligence platform designed to analyze, route, and classify Indian legal case documents using a Mixture-of-Experts (MoE) deep learning architecture.
+LegalTech is an advanced **AI-driven legal analytics system** designed to analyze Indian court case documents and predict judicial outcomes using modern **Natural Language Processing (NLP)** and **Mixture-of-Experts (MoE)** architectures.
 
-The system combines:
-- Domain-adapted language models (Legal-BERT)
-- Parameter-efficient fine-tuning (LoRA)
-- Supervised neural routing
-- Court-specialized expert classifiers
-- A full-stack MERN-based deployment layer
+The system processes complete legal judgments, extracts contextual reasoning patterns using **transformer-based encoders**, and predicts whether an appeal is **accepted or rejected**.
 
-The goal is to move beyond monolithic legal NLP models and instead enable **court-specific reasoning**, **scalable inference**, and **interpretability-driven analytics**.
+The model incorporates **court-specialized expert networks** to capture differences in legal reasoning across judicial hierarchies.
+
+This project contributes toward **AI-assisted legal decision analysis**, helping reduce the analysis time for large-scale legal datasets.
 
 ---
 
-## 2. Problem Motivation
+# 📌 Project Description
 
-Indian legal documents vary significantly across court hierarchies:
-- Constitutional reasoning in Supreme Court cases
-- Precedent-heavy arguments in High Courts
-- Fact-dense procedural language in District Courts
-- Regulatory tone in Tribunal orders
-- Summary-style Daily Orders
+**Court-MOE** is a **Mixture-of-Experts (MoE)** architecture developed to analyze and classify judgments from Indian courts.
 
-A single model fails to capture this diversity effectively.  
-LegalTech addresses this through **explicit expert specialization guided by a learned router**.
+The system captures **unique reasoning patterns across different levels of the judiciary**.
 
----
+The model integrates multiple components to process legal documents:
 
-## 3. End-to-End Architecture
-
-<img width="1777" height="744" alt="image" src="https://github.com/user-attachments/assets/23af228b-40e3-4880-9105-cb22c7cafd6f" />
-
-
-
-The system follows a strictly modular pipeline:
-
-### 3.1 LoRA Conversion
-- Base encoder: Legal-BERT
-- LoRA adapters injected into attention and feed-forward layers
-- Enables memory-efficient fine-tuning without full model retraining
-
-### 3.2 Tokenization Layer
-- Custom tokenizer trained on Indian legal corpora
-- Preserves legal citations, section references, and court-specific terminology
-- Fixed vocabulary for reproducible encoding
-
-### 3.3 Encoding Pipeline
-- Long documents split into overlapping chunks
-- Each chunk encoded independently
-- Mean pooling applied to generate document-level embeddings
-- Output dimension: 768
-
-### 3.4 Router Network
-- Supervised multi-class classifier
-- Input: document embeddings (+ optional metadata)
-- Architecture: SE-Residual MLP
-- Uses temperature annealing to transition from soft to hard routing
-- Outputs a single court expert selection at inference
-
-### 3.5 Court-Specific Experts
-Each expert is trained independently:
-- Supreme Court Expert
-- High Court Expert
-- District Court Expert
-- Tribunal Expert
-- Daily Order Expert
-
-Experts learn court-specific linguistic and semantic distributions, improving accuracy and robustness.
-
-### 3.6 Inference Flow
-1. Document → Tokenization
-2. Tokenized chunks → Encoder
-3. Encoded representation → Router
-4. Router selects expert
-5. Expert produces final prediction
-6. Metrics logged and visualized via frontend
+* Custom tokenizer designed for legal text
+* Fine-tuned **LegalBERT encoder** for contextual representations
+* Lightweight **router network** that dynamically selects expert models
+* **Five specialized expert networks**, each trained on a specific court category
 
 ---
 
-## 4. Technology Stack
+# 🧠 Court Types and Expert Models
+
+| Court Type            | Description                                                                  | Expert Model          |
+| --------------------- | ---------------------------------------------------------------------------- | --------------------- |
+| 🏛 **Supreme Court**  | Highest judicial authority handling constitutional matters and major appeals | Supreme Court Expert  |
+| 🏛 **High Court**     | State-level courts hearing appeals from lower courts                         | High Court Expert     |
+| 🏛 **District Court** | Handles majority of civil and criminal cases at the district level           | District Court Expert |
+| ⚖ **Tribunals**       | Specialized courts dealing with domain-specific disputes                     | Tribunal Expert       |
+| 📜 **Daily Orders**   | Procedural or interim rulings issued during case proceedings                 | Daily Orders Expert   |
+
+Each expert is trained exclusively on **data from its respective court**, allowing the system to capture **domain-specific legal reasoning patterns**.
+
+---
+
+# 🎯 Why Court-MOE?
+
+Legal judgments across courts follow **different writing styles, legal terminology, and reasoning structures**. A single monolithic model often struggles to learn these variations.
+
+Court-MOE solves this using a **Mixture-of-Experts architecture**, where multiple specialized models focus on different court types.
+
+Instead of forcing one model to learn all judicial patterns, the system **routes each case to the most relevant expert networks**.
+
+### Advantages
+
+* **Court-Specific Learning**
+  Each expert focuses on patterns from its court level.
+
+* **Better Generalization**
+  The model adapts to differences between Supreme Court, High Court, District Court, and Tribunal decisions.
+
+* **Efficient Modeling**
+  Only relevant experts are activated rather than the entire model.
+
+* **Improved Prediction Quality**
+  Combining outputs from specialized experts leads to more accurate predictions.
+
+Court-MOE therefore models the **diversity of judicial decision-making more effectively** than traditional single-model approaches.
+
+---
+
+# 🏗️ System Architecture
+
+The model follows a **7-stage machine learning pipeline** designed for legal documents.
+
+<p align="center">
+<img width="900" alt="Court-MOE Architecture" src="https://github.com/user-attachments/assets/076147b0-9e32-4bc8-a64d-8b871396e079">
+</p>
+
+---
+
+# 🔡 Custom Tokenizer
+
+A **domain-trained BPE tokenizer** designed for Indian legal documents.
+
+Handles:
+
+* Legal citations
+* Act names
+* Latin legal terminology
+* Multilingual text
+* Procedural markers
+
+---
+
+# 🧩 LegalBERT Encoder
+
+A fine-tuned **LegalBERT model** adapted for Indian legal data.
+
+It generates **context-aware embeddings** that capture:
+
+* Legal reasoning
+* Case structure
+* Semantic relationships between legal arguments
+
+---
+
+# 🧭 Router Network
+
+A **4-layer SE-Residual MLP** that predicts the most relevant court expert.
+
+Features:
+
+* Metadata-augmented routing
+* Dynamic expert selection
+* Improved predictions for District Courts and Daily Orders
+
+---
+
+# 👩‍⚖️ Expert Models
+
+Five expert networks — one for each court type.
+
+Each expert is trained using advanced techniques:
+
+| Technique                | Purpose                   |
+| ------------------------ | ------------------------- |
+| 3-Fold Stratified K-Fold | Robust validation         |
+| AMP (Mixed Precision)    | Faster training           |
+| SWA                      | Improved generalization   |
+| EMA                      | Stability during training |
+| MixUp                    | Better robustness         |
+| Asymmetric Focal Loss    | Handles class imbalance   |
+
+Each expert learns **court-specific writing styles, legal complexity, and reasoning patterns**.
+
+---
+
+# 🚀 Running Inference
+
+Run the interactive CLI:
+
+```bash
+python prediction.py
+```
+
+You will be prompted for:
+
+```
+📂 Enter path to case file:
+⚖️ Enter court type (press Enter to auto-detect):
+```
+
+### Two Modes
+
+**Auto Mode (Recommended)**
+Leave court type blank → Router selects the expert → Prediction generated.
+
+**Manual Mode**
+
+Specify a court type:
+
+```
+supreme
+high
+district
+tribunal
+daily
+```
+
+The system will **bypass routing and directly use the selected expert**.
+
+---
+
+# 📊 Performance Summary
+
+## 🧭 Router
+
+| Metric          | Value                          |
+| --------------- | ------------------------------ |
+| Accuracy        | ~62.7%                         |
+| Macro F1        | ~0.75                          |
+| Key Improvement | District Courts & Daily Orders |
+
+---
+
+## 👩‍⚖️ Experts
+
+| Court Type     | Performance                          |
+| -------------- | ------------------------------------ |
+| Supreme Court  | Strong                               |
+| High Court     | Strong                               |
+| Tribunal       | Strong                               |
+| District Court | Improved after metadata augmentation |
+| Daily Orders   | Significant improvement              |
+
+Each expert includes **confusion matrices and detailed evaluation reports**.
+
+---
+
+# 🎯 Vision & Roadmap
+
+Court-MOE is built on the idea that:
+
+> **Legal AI should respect the structural diversity of courts.**
+
+Upcoming developments:
+
+* 🐳 **Docker support** for easier deployment
+* 🔍 **Explainability module** for token-level and section-level insights
+* 📡 **REST API** for integration with legal platforms
+
+---
+
+# 📊 Dataset
+
+The model is trained on **NyayaAnumana**, one of the largest datasets of Indian legal judgments.
+
+### Dataset Characteristics
+
+| Feature       | Value                      |
+| ------------- | -------------------------- |
+| Total Cases   | 700,000+                   |
+| Document Type | Long-form legal judgments  |
+| Labels        | Accept / Reject            |
+| Coverage      | Multiple court hierarchies |
+
+### Courts Included
+
+* Supreme Court
+* High Courts
+* Tribunals
+* District Courts
+* Daily Orders
+
+---
+
+# 🛠️ Technologies Used
 
 ### Machine Learning
-- Python
-- PyTorch
-- HuggingFace Transformers
-- Legal-BERT
-- LoRA (PEFT)
+
+* Python
+* PyTorch
+* HuggingFace Transformers
+* Legal-BERT
+* LoRA (PEFT)
 
 ### Backend
-- Node.js
-- Express.js
-- REST-based inference APIs
+
+* Node.js
+* Express.js
+* REST-based inference APIs
 
 ### Frontend
-- React (Vite)
-- Tailwind CSS
-- Interactive dashboards and analytics
+
+* React (Vite)
+* Tailwind CSS
+* Interactive dashboards and analytics
 
 ### Database
-- MongoDB
-- Stores users, logs, metrics, and metadata
+
+* MongoDB
+* Stores users, logs, metrics, and metadata3
+
 
 ### Infrastructure
-- GPU-based training (A100 / DGX class systems)
-- Mixed Precision Training (AMP)
-- Checkpoint-based recovery
+
+* GPU-based training (A100 / DGX class systems)
+* Mixed Precision Training (AMP)
+* Checkpoint-based recovery
 
 ---
 
-## 5. Training Strategy
+# ⚙️ Implementation Details
 
-- Stratified K-Fold Cross Validation
-- Mixed Precision Training (AMP)
-- Stochastic Weight Averaging (SWA)
-- Exponential Moving Average (EMA)
-- MixUp Regularization
-- Asymmetric Focal Loss
-- Cosine Learning Rate Scheduling
+Key techniques:
 
-Each expert is optimized independently to avoid negative transfer.
+* Legal document chunking for long texts
+* Domain-specific tokenization
+* Dynamic expert routing
+* Transformer-based contextual embeddings
+* Weighted expert aggregation
 
----
+Optimization methods:
 
-## 6. Evaluation Metrics
-
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- Court-wise Confusion Matrices
-- Router Entropy and Routing Confidence
-
-Metrics are logged and visualized through the dashboard.
+* AdamW optimizer
+* Binary cross-entropy loss
+* Dropout regularization
 
 ---
 
-## 7. Deployment Overview
+# 📈 Applications
 
-- Backend APIs handle encoding, routing, and inference
-- Frontend dashboards display:
-  - Court-wise predictions
-  - Performance metrics
-  - Confusion matrices
-- System designed for modular scaling and expert expansion
+LegalTech can support several real-world legal applications:
+
+### Legal Research Assistance
+
+AI-assisted analysis of case outcomes.
+
+### Judgment Prediction
+
+Forecasting likely outcomes of legal appeals.
+
+### Legal Document Understanding
+
+Automated extraction of legal reasoning patterns.
+
+### Judicial Analytics
+
+Understanding trends across courts.
 
 ---
 
-## 9. Notes
+# 👨‍💻 Contributors
 
-- Large model files are excluded from version control
-- GPU is recommended for training and batch inference
-  
+This project was developed by a **team of 5 researchers and engineers** working on AI applications in legal systems.
+
 ---
 
-## 11. License
+# 📜 License
 
-This project is intended for academic and research purposes.  
-All rights reserved by the authors.
+This project is intended for **research and educational purposes**.
+
+---
+
+# ⭐ Acknowledgements
+
+* Legal AI research community
+* HuggingFace Transformers
+* NyayaAnumana dataset contributors
+
+---
